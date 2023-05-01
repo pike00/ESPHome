@@ -1,0 +1,44 @@
+esphome:
+  name: ledpwm
+  platform: ESP32
+  board: esp32doit-devkit-v1
+
+# Enable logging
+logger:
+  level: DEBUG
+
+api:
+  port: 6053
+
+ota:
+  password: ""
+
+wifi:
+  ssid: "GT HOYA2019"
+  password: "GT HOYAS2019"
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Bathroom Enviornmental Sensor"
+    password: "password"
+
+captive_portal:
+
+web_server:
+  port: 80
+
+output: 
+  - platform: ledc
+    pin: GPIO19
+    id: gpio_19
+  - platform: ledc
+    pin: GPIO18
+    id: gpio_18
+
+light:
+  - platform: cwww
+    name: Livingroom Lights
+    cold_white: gpio_19
+    warm_white: gpio_18
+    cold_white_color_temperature: 6500 K
+    warm_white_color_temperature: 3000 K

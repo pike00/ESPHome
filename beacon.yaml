@@ -1,0 +1,89 @@
+esphome:
+  name: beacon
+  platform: ESP32
+  board: esp32doit-devkit-v1
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: ""
+
+ota:
+  password: ""
+
+wifi:
+  ssid: "GT HOYA2019"
+  password: "GT HOYAS2019"
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Beacon Fallback Hotspot"
+    password: "password"
+
+
+mqtt:
+  broker: 192.168.0.2
+  port: 1883
+  topic_prefix: "home/bedroom"
+  discovery: false
+
+
+captive_portal:
+
+web_server:
+  port: 80
+
+
+esp32_ble_beacon:
+  type: iBeacon
+  uuid: 'c29ce823-e67a-4e71-bff2-abaa32e77a98'
+
+
+sensor: 
+  - platform: wifi_signal
+    name: "Bedroom Environmental Sensor WiFi Signal"
+    update_interval: 60s
+
+
+  - platform: uptime
+    name: Uptime Sensor
+    id: uptime_sensor
+    update_interval: 60s
+    on_raw_value:
+      then:
+        - text_sensor.template.publish:
+            id: uptime_human
+            state: !lambda |-
+              int seconds = round(id(uptime_sensor).raw_state);
+              int days = seconds / (24 * 3600);
+              seconds = seconds % (24 * 3600);
+              int hours = seconds / 3600;
+              seconds = seconds % 3600;
+              int minutes = seconds /  60;
+              seconds = seconds % 60;
+              return (
+                (days ? to_string(days) + "d " : "") +
+                (hours ? to_string(hours) + "h " : "") +
+                (minutes ? to_string(minutes) + "m " : "") +
+                (to_string(seconds) + "s")
+              ).c_str();
+
+text_sensor:
+  - platform: wifi_info
+    ip_address:
+      name: IP Address
+    ssid:
+      name: SSID
+    mac_address:
+      name: Mac Address
+
+
+      
+  - platform: template
+    name: Uptime Human Readable
+    id: uptime_human
+    icon: mdi:clock-start
+
+

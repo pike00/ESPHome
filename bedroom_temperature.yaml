@@ -1,0 +1,43 @@
+esphome:
+  name: bedroom_temperature
+  platform: ESP32
+  board: esp32doit-devkit-v1
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+  password: ""
+
+ota:
+  password: ""
+
+wifi:
+  ssid: "GT HOYA2019"
+  password: "GT HOYAS2019"
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Bathroom Environment Sensor"
+    password: "uncover-frostbite-wilder"
+
+captive_portal:
+
+
+i2c:
+  sda: 21
+  scl: 22
+  scan: true
+  id: bus_a
+
+sensor:
+- platform: tmp102
+  name: "Bedroom Temperature"
+  update_interval: 5s
+
+
+
+
+web_server:
+  port: 80

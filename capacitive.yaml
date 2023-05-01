@@ -1,0 +1,69 @@
+# ESP32 NodeMCU
+esphome:
+  name: bed_sensor
+  platform: ESP32
+  board: esp32doit-devkit-v1
+
+wifi:
+  ssid: pikenet
+  password: <pikenet password>
+  ap:
+    ssid: “Bed Sensor Fallback Hotspot”
+# Set a password in case Wi-Fi fails
+    password: “change_this_please!”
+    
+# Fallback portal 
+# captive_portal:# Logging
+logger: # Uncomment this if you use Home Assistant
+api:
+#  password: “change_this_please!”# Fill your MQTT information
+# Delete this if you're using Home Assistant
+mqtt:
+  broker: <broker>
+  username: <username>
+  password: <password>
+
+ota:
+#   password: “change_this_please!”# Setting up the pressure mats
+
+
+esp32_touch:
+# Delete this after you are done with the setup process
+   setup_mode: true # All the pressure mats
+# Change the pins to the pins you have used
+binary_sensor:
+   - platform: esp32_touch
+     name: "Sensor"
+     pin: GPIO2
+# See step 11
+     threshold: 5
+     id: sensor
+#    - platform: esp32_touch
+#      name: "Bottom Left"
+#      pin: GPIO33
+# # See step 11
+#      threshold: 4
+#      id: bottom_left
+#    - platform: esp32_touch
+#      name: "Top Left"
+#      pin: GPIO15
+# # See step 11
+#      threshold: 4
+#      id: top_left
+#    - platform: esp32_touch
+#      name: "Bottom Right"
+#      pin: GPIO27
+# # See step 11
+#      threshold: 4
+#      id: bottom_right# The main sensor that is created using the all the zones    
+#    - platform: template
+#      name: "Bed Sensor"
+#      lambda: |-
+#        if (id(top_right).state ||
+#            id(top_left).state ||
+#            id(bottom_right).state ||
+#            id(bottom_left).state) {
+#          return true;
+#        } else {
+#          return false;
+#        }
